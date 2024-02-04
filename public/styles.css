@@ -1,0 +1,105 @@
+body {
+    background-color: lightgray;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: black;
+}
+
+main {
+    display: flex;
+    background-color: aquamarine;
+}
+
+#chatlog, #chatinput, nav {
+    border: 1px solid brown;
+    background-color: ivory;
+    margin: 5px;
+}
+
+#chatlog, #chatinputwrapper {
+    width: 70%;
+}
+
+#chatlog {
+    padding-top: 5px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.log {
+    font-size: 12px;
+    display: flex;
+    margin: 0 0 0 10px;
+    gap: 5px;
+    background-color: antiquewhite;
+}
+
+.msgcost {
+    background-color: goldenrod;
+    border: 1px solid gold;
+    border-radius: 5px;
+    color:yellow;
+    height: 15px;
+    padding: 3px;
+}
+
+.logname {
+    color: blue;
+
+}
+
+.logmessage {
+    color: red;
+}
+
+.logname, .logmessage {
+    display: flex;
+    align-items: center;
+}
+
+nav {
+    display: flex;
+    width: 200px;
+    height: 400px;
+    padding-left: 10px;
+    flex-direction: column;
+}
+
+nav p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 180px;
+    background-color: bisque;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: darkolivegreen;
+    padding: 3px;
+    border-radius: 5px;
+}
+
+nav p::before {
+    content: "\2665";
+    color: red;
+}
+
+#chatinputwrapper {
+    margin: 5px;
+}
+
+#chatinput, button {
+    height: 40px;
+    margin: 0;
+    padding: 0;
+}
+
+#chatinput {
+    padding-left: 10px;
+    width: 70%;
+}
+
+button {
+    background-color: brown;
+    color: ivory;
+    border: 1px solid ivory;
+    width: calc(30% - 6px);
+}
