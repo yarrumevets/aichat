@@ -33,32 +33,20 @@ async function sendMessage(message) {
   const messageData = {
     message,
   };
-  const response = await fetch("/api/send", {
+  const response = await fetch("./api/send", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(messageData),
-  });
+  }).catch((err) => console.error("Error: ", err));
   const jsonResponse = await response.json();
-  console.log("Message status: ", jsonResponse.response);
-
   const chatGPTMsgCost = createChatLog("ChatGPT", jsonResponse.response);
-
   const promptCost = calcCost(jsonResponse.usage.prompt_tokens, "prompt");
   const completionCost = calcCost(
     jsonResponse.usage.completion_tokens,
     "completion"
   );
-
-  //const pCents = promptCost / 100;
-  //const cCents = completionCost / 100;
-
-  // console.log("cost ", promptCost, " / 100 = ", pCents);
-
-  // myMsgCost.innerHTML = `&#162;${pCents}`;
-  // chatGPTMsgCost.innerHTML = `&#162;${cCents}`;
-
   myMsgCost.innerHTML = `$${promptCost.toFixed(7)}`;
   chatGPTMsgCost.innerHTML = `$${completionCost.toFixed(7)}`;
 }
@@ -67,7 +55,6 @@ const doSend = () => {
   const message = inputField.value;
   if (!message) return;
   inputField.value = "";
-  console.log(Date.now(), " M: ", message);
   inputField.focus();
   sendMessage(message);
 };

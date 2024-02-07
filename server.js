@@ -12,9 +12,7 @@ app.get("/", (req, res) => {
 const openaiApiCreds = require("./openaiApiCreds.json");
 
 app.post("/api/send", (req, res) => {
-  console.log("----------------------[ MESSAGE ]----------------------");
   const message = req.body.message;
-  console.log("Message from user: ", message);
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Authorization", `Bearer ${openaiApiCreds.openaiApiKey}`);
