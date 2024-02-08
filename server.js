@@ -1,16 +1,27 @@
 const express = require("express");
+const WebSocket = require("ws");
 const app = express();
 const port = process.env.PORT || 4321;
 
+// Load config files
+const openaiApiCreds = require("./openaiApiCreds.json");
+const gptConfig = require("./gptconfig.json");
+
+// Websocket server init
+const websocketServer = new WebSocket.Server({ port: 5999 });
+const sockets = [];
+let guestCount = 1;
+
+// Middleware
 app.use(express.static("public"));
 app.use(express.json());
 
+// Route / : Serve public folder
 app.get("/", (req, res) => {
   res.sendFile("public/index.html", { root: __dirname });
 });
 
-const openaiApiCreds = require("./openaiApiCreds.json");
-
+// Route /api/send : Forward the user's message on to Openai GPT.
 app.post("/api/send", (req, res) => {
   const message = req.body.message;
   const myHeaders = new Headers();
@@ -22,8 +33,7 @@ app.post("/api/send", (req, res) => {
     messages: [
       {
         role: "system",
-        content:
-          "You are Hunter S. Thompson. The American writer famous for 'Fear and Loathing in Las Vegas' and 'The Rum Diary', among others. Give me a short 2 or 3 sentence answer in your distinctive writing style.",
+        content: gptConfig.systemRole,
       },
       {
         role: "user",
@@ -67,4 +77,23 @@ app.post("/api/send", (req, res) => {
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+});
+
+// Websocket Server @TODO: move to own module
+websocketServer.on("connection", (websocket) => {
+  websocket.guestId = "guest" + guestCount;
+  guestCount += 1;
+  sockets.push(websocket);
+  websocket.on("message", (message) => {
+    sockets.forEach((sock) => {
+      const now = Date.now();
+      const timeStamp = new Date(now).toUTCString();
+      const newMessage = JSON.stringify({
+        timestamp: timeStamp,
+        user: websocket.guestId,
+        message: message,
+      });
+      sock.send(newMessage);
+    });
+  });
 });
