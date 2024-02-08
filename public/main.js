@@ -41,7 +41,7 @@ async function sendMessage(message) {
     body: JSON.stringify(messageData),
   }).catch((err) => console.error("Error: ", err));
   const jsonResponse = await response.json();
-  const chatGPTMsgCost = createChatLog("ChatGPT", jsonResponse.response);
+  const chatGPTMsgCost = createChatLog("Ai", jsonResponse.response);
   const promptCost = calcCost(jsonResponse.usage.prompt_tokens, "prompt");
   const completionCost = calcCost(
     jsonResponse.usage.completion_tokens,
