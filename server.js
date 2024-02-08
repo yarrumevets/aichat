@@ -1,16 +1,10 @@
 const express = require("express");
-const WebSocket = require("ws");
 const app = express();
 const port = process.env.PORT || 4321;
 
 // Load config files
 const openaiApiCreds = require("./openaiApiCreds.json");
 const gptConfig = require("./gptconfig.json");
-
-// Websocket server init
-const websocketServer = new WebSocket.Server({ port: 5999 });
-const sockets = [];
-let guestCount = 1;
 
 // Middleware
 app.use(express.static("public"));
@@ -77,23 +71,4 @@ app.post("/api/send", (req, res) => {
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-});
-
-// Websocket Server @TODO: move to own module
-websocketServer.on("connection", (websocket) => {
-  websocket.guestId = "guest" + guestCount;
-  guestCount += 1;
-  sockets.push(websocket);
-  websocket.on("message", (message) => {
-    sockets.forEach((sock) => {
-      const now = Date.now();
-      const timeStamp = new Date(now).toUTCString();
-      const newMessage = JSON.stringify({
-        timestamp: timeStamp,
-        user: websocket.guestId,
-        message: message,
-      });
-      sock.send(newMessage);
-    });
-  });
 });
